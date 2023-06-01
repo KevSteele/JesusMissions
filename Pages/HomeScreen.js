@@ -1,38 +1,22 @@
+// HomeScreen.js
 import React from 'react';
-import { StyleSheet, View, Text, Button, Pressable } from 'react-native';
-// import { styles } from '../App';
+import { View, Text, Pressable } from 'react-native';
+import { styles } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>Welcome to Jesus Missions!</Text>
-      <Button style={styles.button}
-        title="Go on a missions trip"
-        onPress={() => navigation.navigate('NewView')}
-      />
-      <Button style={styles.button}
-        title="Set up a missions trip"
-        onPress={() => navigation.navigate('NewView')}
-      />
+      <View style={styles.buttonContainer}>
+        <Pressable style={styles.button} onPress={() => navigation.navigate('NewView')}>
+          <Text style={styles.buttonText}>Go on a missions trip</Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={() => navigation.navigate('NewView')}>
+          <Text style={styles.buttonText}>Set up a missions trip</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button: {
-    flex: 1,
-    backgroundColor: '#00f',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
-
