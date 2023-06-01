@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import GoOnMissions from './Pages/GoOnMissions';
 import SetUpMissions from './Pages/SetUpMissions';
+import SignIn from './Pages/SignIn';
+import SignUp from './Pages/SignUp';
 import HomeScreen from './Pages/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,9 +14,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="GoOnMissions" component={GoOnMissions} />
-        <Stack.Screen name="SetUpMissions" component={SetUpMissions} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Jesus Missions' }} />
+        <Stack.Screen name='GoOnMissions' component={GoOnMissions} options={{ title: 'Go on a Missions Trip' }} />
+        <Stack.Screen name="SetUpMissions" component={SetUpMissions} options={{ title: 'Set up a Missions Trip' }} />
+        <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Sign In' }} />
+        <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Create an Account' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

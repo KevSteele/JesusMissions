@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { styles } from '../App';
 
-const SetUpMissions = ({ navigation }) => {
+const SignIn = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text>Set up a Missions Trip</Text>
@@ -10,4 +10,4 @@ const SetUpMissions = ({ navigation }) => {
   );
 };
 
-export default SetUpMissions;
+export default SignIn;

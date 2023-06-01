@@ -15,11 +15,11 @@ const HomeScreen = ({ navigation }) => {
         </Pressable>
       </View>
       <View style={styles.signon_signin_Container}>
-        <Pressable onPress={() => navigation.navigate('SignUp')}>
+        <Pressable onPress={() => navigation.navigate('SignIn')}>
           <Text style={styles.pressableText}>Sign-In</Text>
         </Pressable>
         <Text style={{color: '#0000FF'}}>/</Text>
-        <Pressable onPress={() => navigation.navigate('SignIn')}>
+        <Pressable onPress={() => navigation.navigate('SignUp')}>
           <Text style={styles.pressableText}>Sign-Up</Text>
         </Pressable>
       </View>
