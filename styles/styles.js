@@ -1,4 +1,3 @@
-// styles.js
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -8,18 +7,39 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  heading: {
+    fontSize: 32, // Change this to the size you want
+    fontWeight: 'bold',
+    marginBottom: 20, // This gives space below the heading
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '25%',
+    width: '30%',
+    marginBottom: 20, // This gives space below the buttons
+  },
+  signon_signin_Container: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    // width: '25%',
+    marginBottom: 20, // This gives space below the buttons
   },
   button: {
     backgroundColor: '#00f',
     padding: 10,
     borderRadius: 10,
+    marginLeft: 10,
+    marginRight: 10
   },
   buttonText: {
     color: '#fff',
     textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  pressableText: {
+    color: 'blue', // This makes the pressable's look like hyperlinks
+    textDecorationLine: 'underline', // This underlines the pressable's text
+    marginLeft: 20,
+    marginRight: 20
   },
 });
