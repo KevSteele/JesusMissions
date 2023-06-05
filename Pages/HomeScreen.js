@@ -13,9 +13,9 @@ const HomeScreen = ({ navigation }) => {
         <Pressable style={styles.button} onPress={() => navigation.navigate('GoOnMissions')}>
           <Text style={styles.buttonText}>Find Your Mission</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={() => navigation.navigate('SetUpMissions')}>
+        {/* <Pressable style={styles.button} onPress={() => navigation.navigate('SetUpMissions')}>
           <Text style={styles.buttonText}>Set up a missions trip</Text>
-        </Pressable>
+        </Pressable> */}
       </View>
       <View style={styles.signon_signin_Container}>
         <Pressable onPress={() => navigation.navigate('SignIn')}>

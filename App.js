@@ -16,7 +16,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Jesus Missions' }} />
         <Stack.Screen name='GoOnMissions' component={FindYourMission} options={{ title: 'Find Your Mission' }} />
-        <Stack.Screen name="SetUpMissions" component={SetUpMissions} options={{ title: 'Set up a Missions Trip' }} />
+        {/* <Stack.Screen name="SetUpMissions" component={SetUpMissions} options={{ title: 'Set up a Missions Trip' }} /> */}
         <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Sign In' }} />
         <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Create an Account' }} />
       </Stack.Navigator>

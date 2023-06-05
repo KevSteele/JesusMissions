@@ -13,13 +13,15 @@ export const styles = StyleSheet.create({
     marginBottom: 20, // This gives space below the heading
   },
   logoContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
     justifyContent: 'left'
   },
   jesus: {  
     fontSize: 32,  
     fontWeight: '900',  // Simulate Arial Black 
     color: '#ffffff',     // White color
-    marginBottom: -1
   },  
   missions: {  
     fontSize: 32,  
