@@ -5,10 +5,13 @@ import { styles } from '../styles/styles';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Welcome to Jesus Missions</Text>
+      <View style={styles.logoContainer}>
+        <Text style={styles.jesus}>JESUS</Text>
+        <Text style={styles.missions}>MISSIONS</Text>
+      </View>
       <View style={styles.buttonContainer}>
         <Pressable style={styles.button} onPress={() => navigation.navigate('GoOnMissions')}>
-          <Text style={styles.buttonText}>Go on a missions trip</Text>
+          <Text style={styles.buttonText}>Find Your Mission</Text>
         </Pressable>
         <Pressable style={styles.button} onPress={() => navigation.navigate('SetUpMissions')}>
           <Text style={styles.buttonText}>Set up a missions trip</Text>

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#1b1b1b',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -12,16 +12,28 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20, // This gives space below the heading
   },
+  logoContainer: {
+    justifyContent: 'left'
+  },
+  jesus: {  
+    fontSize: 32,  
+    fontWeight: '900',  // Simulate Arial Black 
+    color: '#ffffff',     // White color
+    marginBottom: -1
+  },  
+  missions: {  
+    fontSize: 32,  
+    fontWeight: 'bold',  
+    color: '#ffffff',     // White color
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '30%',
     marginBottom: 20, // This gives space below the buttons
   },
   signon_signin_Container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    // width: '25%',
     marginBottom: 20, // This gives space below the buttons
   },
   button: {
