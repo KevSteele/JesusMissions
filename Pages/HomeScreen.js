@@ -10,9 +10,9 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.homeHeaderText}>Jesus Missions.</Text>
       </View>
       <View style={styles.homeBodyContainer}>
-        <Image source={require('../Images/JesusMission-white.png')} styles={styles.container}></Image>
+        <Image source={require('../Images/JesusMission-white.png')} style={styles.homeLogo}></Image>
         <View style={styles.buttonContainer}>
-          <Pressable style={styles.button} onPress={() => navigation.navigate('GoOnMissions')}>
+          <Pressable style={styles.button} onPress={() => navigation.navigate('FindYourMission')}>
             <Text style={styles.buttonText}>Find Your Mission</Text>
           </Pressable>
           {/* <Pressable style={styles.button} onPress={() => navigation.navigate('SetUpMissions')}>

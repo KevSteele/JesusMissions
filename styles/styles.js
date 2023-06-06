@@ -2,10 +2,16 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     // backgroundColor: '#f00',
     // alignItems: 'center',
     // justifyContent: 'center',
+  },
+  heading: {
+    backgroundColor: '#1b1b1b',
+    fontSize: 32, // Change this to the size you want
+    fontWeight: 'bold',
+    marginBottom: 20, // This gives space below the heading
   },
   homeHeader: {
     marginTop: 30,
@@ -18,31 +24,23 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',  
     color: '#ffffff',   
   },
-  homeLogo: {
-    height: 100
-  },
   homeBodyContainer: {
     height: '80%',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center'
     // backgroundColor: 'red'
   },
-  heading: {
-    backgroundColor: '#1b1b1b',
-    fontSize: 32, // Change this to the size you want
-    fontWeight: 'bold',
-    marginBottom: 20, // This gives space below the heading
-  },
-  logoContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    justifyContent: 'left',
-    paddingLeft: 10
+  homeLogo: {
+    width: '45%',
+    height: '25%',
+    resizeMode: 'contain',
+    // marginBottom: 20
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20, // This gives space below the buttons
+    position: 'absolute',
+    // flexDirection: 'row',
+    // justifyContent: 'space-around',
+    alignSelf: 'center'
   },
   signon_signin_Container: {
     flexDirection: 'row',
