@@ -13,8 +13,12 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Jesus Missions' }} />
+      <Stack.Navigator screenOptions={{
+        headerStyle: {backgroundColor: '#1b1b1b'},
+        headerTintColor: '#fff',
+        headerShown: false
+      }}>
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
         <Stack.Screen name='GoOnMissions' component={FindYourMission} options={{ title: 'Find Your Mission' }} />
         {/* <Stack.Screen name="SetUpMissions" component={SetUpMissions} options={{ title: 'Set up a Missions Trip' }} /> */}
         <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Sign In' }} />
