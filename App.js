@@ -16,10 +16,9 @@ export default function App() {
       <Stack.Navigator screenOptions={{
         headerStyle: {backgroundColor: '#1b1b1b'},
         headerTintColor: '#fff',
-        headerShown: false
       }}>
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home' }} />
-        <Stack.Screen name='GoOnMissions' component={FindYourMission} options={{ title: 'Find Your Mission' }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Home', headerShown: false }} />
+        <Stack.Screen name='FindYourMission' component={FindYourMission} options={{ title: 'Find Your Mission' }} />
         {/* <Stack.Screen name="SetUpMissions" component={SetUpMissions} options={{ title: 'Set up a Missions Trip' }} /> */}
         <Stack.Screen name="SignIn" component={SignIn} options={{ title: 'Sign In' }} />
         <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Create an Account' }} />
