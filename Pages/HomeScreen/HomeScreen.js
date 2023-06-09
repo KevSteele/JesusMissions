@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Text, Pressable, Image, ImageBackground } from 'react-native';
-import { styles } from '../styles/styles';
+import { styles } from './HomeScreen_styles';
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <ImageBackground source={require('../Images/Home_Background.jpg')} style={styles.container}>
+    <ImageBackground source={require('../../Images/Home_Background.jpg')} style={styles.container}>
     <View style={styles.container}>
       <View style={styles.homeHeader}>
         <Text style={styles.homeHeaderText}>Jesus Missions.</Text>
       </View>
       <View style={styles.homeBodyContainer}>
-        <Image source={require('../Images/JesusMission-white.png')} style={styles.homeLogo}></Image>
+        <Image source={require('../../Images/JesusMission-white.png')} style={styles.homeLogo}></Image>
         <View style={styles.buttonContainer}>
           <Pressable style={styles.button} onPress={() => navigation.navigate('FindYourMission')}>
             <Text style={styles.buttonText}>Find Your Mission</Text>
