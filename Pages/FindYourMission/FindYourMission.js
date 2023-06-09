@@ -9,8 +9,8 @@ const FindYourMission = ({ navigation }) => {
       <MapView
         style={styles.mapContainer}
         initialRegion={{
-          latitude: 28.0000,
-          longitude: 82.0000,
+          latitude: 28.3949,
+          longitude: 82.1240,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
