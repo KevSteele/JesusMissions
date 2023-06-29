@@ -16,16 +16,16 @@ const FindYourMission = ({ navigation }) => {
           longitudeDelta: 0.0421,
         }}
       >
-        <Marker 
+        <Marker style={{flex: 1, backgroundColor: 'blue', alignItems: 'center'}}
           coordinate={{ 
             latitude: 28.0430, 
             longitude: 84.0696 }}
         >
-          <Image
+          <Image 
             source={require('../../assets/icon.png')}
             style={{ width: 40, height: 40 }}
           />
-          <Callout style={{width: 150}}>
+          <Callout style={{flex: 1, position: 'relative'}}> 
             <Text>Organization: RTC</Text>
             <Text>Destination: Himalayas</Text>
             <Text>Threat Level: Midnight</Text>
