@@ -1,5 +1,5 @@
 {
-  "name": "jesusmissions-cms",
+  "name": "backend",
   "private": true,
   "version": "0.1.0",
   "description": "A Strapi application",
@@ -26,7 +26,7 @@
     "name": "A Strapi developer"
   },
   "strapi": {
-    "uuid": "9ca34f84-3c9d-4edf-b2c9-8ee4b2b64b05"
+    "uuid": "7079e606-bbc4-405b-b002-2a50a055b357"
   },
   "engines": {
     "node": ">=18.0.0 <=20.x.x",
