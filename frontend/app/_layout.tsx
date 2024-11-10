@@ -1,3 +1,4 @@
+import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -46,8 +47,7 @@ export default function RootLayout() {
   }
 
   return (
-    // Wrap the RootLayoutNav with QueryClientProvider
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}> {/* Reintroduced QueryClientProvider */}
       <RootLayoutNav />
     </QueryClientProvider>
   );
