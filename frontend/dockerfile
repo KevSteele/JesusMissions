@@ -13,11 +13,8 @@ RUN npm install
 # Copy the rest of the frontend code
 COPY . .
 
-# Build the frontend if necessary (for example, with React)
-RUN npm run build
-
 # Expose the port your frontend server uses (e.g., 3001)
 EXPOSE 3001
 
-# Run the frontend server
+# Use npm start for development or serve static files if building a web app
 CMD ["npm", "start"]
