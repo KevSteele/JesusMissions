@@ -1,4 +1,6 @@
 # JesusMissions
+For setup instructions, see `frontend/README.md`.
+
 
 Here's a breakdown of your considerations and some recommendations:
 
