@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; // Import React Query components
 import { useColorScheme } from '@/components/useColorScheme';
+import "../global.css";
 
 export {
   // Catch any errors thrown by the Layout component.
