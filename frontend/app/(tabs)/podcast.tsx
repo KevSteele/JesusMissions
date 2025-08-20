@@ -10,9 +10,10 @@ import { useState } from 'react';
 export default function PodcastScreen() {
   const [selectedEpisode, setSelectedEpisode] = useState<PodcastEpisode | null>(null);
 
-  const { data: episodes, isLoading, error } = useQuery({
+  const { data: episodes, isLoading, error, refetch, isFetching } = useQuery({
     queryKey: ['podcast-episodes'],
     queryFn: fetchPodcastEpisodes,
+    staleTime: 1000 * 60 * 60 * 12, // 12 hours - matches the prefetch setting
   });
 
   // Auto-select first episode (latest) when episodes load but don't auto-play
@@ -35,6 +36,8 @@ export default function PodcastScreen() {
           episodes={episodes}
           selectedEpisode={selectedEpisode}
           onEpisodeSelect={setSelectedEpisode}
+          onRefresh={refetch}
+          isRefreshing={isFetching}
         />
       )}
 
