@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { PodcastEpisode } from '@/types/podcast';
 
@@ -7,12 +7,16 @@ interface PodcastEpisodeListProps {
     episodes: PodcastEpisode[];
     selectedEpisode?: PodcastEpisode | null;
     onEpisodeSelect: (episode: PodcastEpisode) => void;
+    onRefresh?: () => void;
+    isRefreshing?: boolean;
 }
 
 export default function PodcastEpisodeList({
     episodes,
     selectedEpisode,
-    onEpisodeSelect
+    onEpisodeSelect,
+    onRefresh,
+    isRefreshing = false
 }: PodcastEpisodeListProps) {
 
     const formatDate = (dateString: string) => {
@@ -76,6 +80,17 @@ export default function PodcastEpisodeList({
             contentContainerStyle={styles.listContainer}
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
+            refreshControl={
+                onRefresh ? (
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={onRefresh}
+                        tintColor="#007AFF"
+                        title="Pull to refresh episodes"
+                        titleColor="#007AFF"
+                    />
+                ) : undefined
+            }
         />
     );
 }

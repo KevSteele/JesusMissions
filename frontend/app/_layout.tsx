@@ -6,8 +6,9 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; // Import React Query components
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query'; // Import React Query components
 import { useColorScheme } from '@/components/useColorScheme';
+import { fetchPodcastEpisodes } from '@/api/rss'; // Import the podcast fetch function
 import "../global.css";
 
 export {
@@ -56,6 +57,16 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const queryClient = useQueryClient();
+
+  // Prefetch podcast episodes when app starts
+  useEffect(() => {
+    queryClient.prefetchQuery({
+      queryKey: ['podcast-episodes'],
+      queryFn: fetchPodcastEpisodes,
+      staleTime: 1000 * 60 * 60 * 12, // Consider data fresh for 12 hours
+    });
+  }, [queryClient]);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
