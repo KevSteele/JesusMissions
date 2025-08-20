@@ -5,5 +5,12 @@
     "target": "ES2021",
     "checkJs": true,
     "allowJs": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    ".cache",
+    ".tmp",
+    "public/uploads"
+  ]
 }
