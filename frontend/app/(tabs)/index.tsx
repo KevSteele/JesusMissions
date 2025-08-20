@@ -1,15 +1,22 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import VideoPlayer from '@/components/VideoPlayer';
 
-export default function TabOneScreen() {
+const landOfMartyrdomTeaserId: string = 'J53a-9dh63w';
+
+export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
+      <Text style={styles.title}>Jesus Missions</Text>
+      <VideoPlayer 
+        videoId={landOfMartyrdomTeaserId} 
+        autoPlay={true}
+        loop={false}
+      />
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
     </View>
   );
 }
