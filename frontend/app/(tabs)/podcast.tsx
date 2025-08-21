@@ -1,11 +1,9 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import React, { useState } from 'react';
+import { Text, View } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchPodcastEpisodes } from '@/api/rss';
 import { PodcastEpisode } from '@/types/podcast';
 import PodcastEpisodeList from '@/components/PodcastEpisodeList';
-import { useState } from 'react';
 import AudioPlayer from '@/components/AudioPlayer';
 
 export default function PodcastScreen() {
@@ -25,14 +23,14 @@ export default function PodcastScreen() {
   }, [episodes, selectedEpisode]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Jesus Missions Podcast</Text>
+    <View className="flex-1 bg-background dark:bg-background-dark">
+      <View className="px-5 pb-2 items-center">
+        <Text className="text-2xl font-bold text-primary dark:text-primary-dark">Jesus Missions Podcast</Text>
       </View>
 
       {/* Audio Player for Selected Episode */}
       {selectedEpisode && (
-        <View style={styles.playerSection}>
+  <View className="px-5 pb-5">
           <AudioPlayer
             audioUrl={selectedEpisode.audioUrl}
             title={selectedEpisode.title}
@@ -42,13 +40,16 @@ export default function PodcastScreen() {
         </View>
       )}
 
-      {isLoading && <Text>Loading episodes...</Text>}
 
-      {error && <Text>Error: {error.message}</Text>}
+  {isLoading && <Text className="text-primary dark:text-primary-dark">Loading episodes...</Text>}
+
+  {error && <Text className="text-error dark:text-error-dark">Error: {error.message}</Text>}
 
       {episodes && episodes.length > 0 && (
-        <View style={styles.episodeListSection}>
-          <Text style={styles.sectionTitle}>Episodes</Text>
+        <View className="flex-1">
+          <Text className="text-lg font-semibold px-5 pb-2 text-primary dark:text-primary-dark">
+            Episodes
+          </Text>
           <PodcastEpisodeList
             episodes={episodes}
             selectedEpisode={selectedEpisode}
@@ -60,42 +61,8 @@ export default function PodcastScreen() {
       )}
 
       {episodes && episodes.length === 0 && (
-        <Text>No episodes found.</Text>
+        <Text className="text-primary dark:text-primary-dark">No episodes found.</Text>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    padding: 20,
-    paddingBottom: 10,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  playerSection: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  episodeListSection: {
-    flex: 1,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    color: '#333',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

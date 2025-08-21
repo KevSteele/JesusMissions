@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { FlatList, TouchableOpacity, RefreshControl } from 'react-native';
+import { Text, View } from 'react-native';
 import { PodcastEpisode } from '@/types/podcast';
 
 interface PodcastEpisodeListProps {
@@ -43,29 +43,36 @@ export default function PodcastEpisodeList({
 
         return (
             <TouchableOpacity
-                style={[
-                    styles.episodeCard,
-                    isSelected && styles.selectedCard
-                ]}
+                className={`rounded-xl border overflow-hidden ${isSelected ? 'border-blue-500 border-2 bg-blue-50' : 'border-gray-200'} mb-3`}
                 onPress={() => onEpisodeSelect(item)}
             >
-                <View style={[styles.cardContent, isSelected && styles.selectedContent]}>
-                    <View style={styles.episodeHeader}>
-                        <Text style={styles.episodeNumber}>Episode {item.episodeNumber}</Text>
-                        <Text style={styles.duration}>{item.duration || 'No duration'}</Text>
+                <View className={`p-4 ${isSelected ? 'bg-blue-50 dark:bg-blue-900/30' : 'bg-background dark:bg-background-dark'}`}>
+                    <View className="flex-row justify-between items-center mb-2">
+                        <Text className="text-xs font-semibold uppercase text-muted dark:text-muted-dark">
+                            Episode {item.episodeNumber}
+                        </Text>
+                        <Text className="text-xs font-medium text-muted dark:text-muted-dark">
+                            {item.duration || 'No duration'}
+                        </Text>
                     </View>
 
-                    <Text style={styles.episodeTitle}>{item.title || 'Untitled Episode'}</Text>
+                    <Text className="text-lg font-bold mb-2 leading-6 text-primary dark:text-primary-dark">
+                        {item.title || 'Untitled Episode'}
+                    </Text>
 
                     {item.description && item.description.trim() && (
-                        <Text style={styles.episodeDescription} numberOfLines={3}>
-                            {item.description.replace(/<[^>]*>/g, '').trim() || 'No description available'} {/* Strip HTML */}
+                        <Text className="text-sm text-muted dark:text-muted-dark mb-3" numberOfLines={3}>
+                            {item.description.replace(/<[^>]*>/g, '').trim() || 'No description available'}
                         </Text>
                     )}
 
-                    <View style={styles.episodeFooter}>
-                        <Text style={styles.publishDate}>{formatDate(item.publishedDate)}</Text>
-                        <Text style={styles.creator}>by {item.creator || 'Unknown'}</Text>
+                    <View className="flex-row justify-between items-center">
+                        <Text className="text-xs text-muted dark:text-muted-dark">
+                            {formatDate(item.publishedDate)}
+                        </Text>
+                        <Text className="text-xs italic text-muted dark:text-muted-dark">
+                            by {item.creator || 'Unknown'}
+                        </Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -77,9 +84,9 @@ export default function PodcastEpisodeList({
             data={episodes}
             renderItem={renderEpisode}
             keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContainer}
+            contentContainerClassName="p-4"
             showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            ItemSeparatorComponent={() => <View className="h-3" />}
             refreshControl={
                 onRefresh ? (
                     <RefreshControl
@@ -94,71 +101,3 @@ export default function PodcastEpisodeList({
         />
     );
 }
-
-const styles = StyleSheet.create({
-    listContainer: {
-        padding: 16,
-    },
-    episodeCard: {
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: '#e1e1e1',
-        overflow: 'hidden',
-    },
-    selectedCard: {
-        borderColor: '#007AFF',
-        borderWidth: 2,
-    },
-    cardContent: {
-        padding: 16,
-    },
-    selectedContent: {
-        backgroundColor: '#f0f8ff',
-    },
-    episodeHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    episodeNumber: {
-        fontSize: 12,
-        fontWeight: '600',
-        color: '#666',
-        textTransform: 'uppercase',
-    },
-    duration: {
-        fontSize: 12,
-        color: '#666',
-        fontWeight: '500',
-    },
-    episodeTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 8,
-        lineHeight: 24,
-    },
-    episodeDescription: {
-        fontSize: 14,
-        lineHeight: 20,
-        color: '#666',
-        marginBottom: 12,
-    },
-    episodeFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    publishDate: {
-        fontSize: 12,
-        color: '#999',
-    },
-    creator: {
-        fontSize: 12,
-        color: '#999',
-        fontStyle: 'italic',
-    },
-    separator: {
-        height: 12,
-    },
-});

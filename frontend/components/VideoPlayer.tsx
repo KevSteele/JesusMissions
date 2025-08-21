@@ -1,6 +1,6 @@
 import React from 'react';
 import YoutubePlayer from 'react-native-youtube-iframe';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 interface VideoPlayerProps {
     videoId: string;
@@ -10,24 +10,19 @@ interface VideoPlayerProps {
 
 export default function VideoPlayer({ videoId, autoPlay = false, loop = false }: VideoPlayerProps) {
     return (
-        <View style={styles.contentContainer}>
-            <YoutubePlayer
-                height={300}
-                play={autoPlay}
-                videoId={videoId}
-                onChangeState={() => { }}
-                initialPlayerParams={{
-                    loop: loop,
-                    controls: true,
-                }}
-            />
+        <View className="px-4">
+            <View className="w-full aspect-[16/9] bg-background dark:bg-background-dark">
+                <YoutubePlayer
+                    height={300}
+                    play={autoPlay}
+                    videoId={videoId}
+                    onChangeState={() => { }}
+                    initialPlayerParams={{
+                        loop: loop,
+                        controls: true,
+                    }}
+                    />
+            </View>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    contentContainer: {
-        width: '100%',
-        aspectRatio: 16 / 9, // 16:9 aspect ratio for responsive video
-    },
-});
