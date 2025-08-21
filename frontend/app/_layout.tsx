@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -7,7 +7,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query'; // Import React Query components
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from 'react-native';
 import { fetchPodcastEpisodes } from '@/api/rss'; // Import the podcast fetch function
 import "../global.css";
 
@@ -58,7 +58,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const queryClient = useQueryClient();
-
+  
   // Prefetch podcast episodes when app starts
   useEffect(() => {
     queryClient.prefetchQuery({
