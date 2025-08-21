@@ -9,8 +9,8 @@ const landOfMartyrdomTeaserId: string = 'J53a-9dh63w';
 
 export default function HomeScreen() {
   return (
-    <View className="flex-1 items-center justify-center bg-background dark:bg-background-dark">
-      <Text className="text-xl font-bold text-primary dark:text-primary-dark">Jesus Missions</Text>
+    <View className="flex-1 items-center justify-center bg-white dark:bg-zinc-900">
+      <Text className="text-xl font-bold text-black dark:text-white">Jesus Missions</Text>
       <VideoPlayer 
         videoId={landOfMartyrdomTeaserId} 
         autoPlay={true}

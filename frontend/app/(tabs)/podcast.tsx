@@ -23,9 +23,9 @@ export default function PodcastScreen() {
   }, [episodes, selectedEpisode]);
 
   return (
-    <View className="flex-1 bg-background dark:bg-background-dark">
+  <View className="flex-1 bg-white dark:bg-zinc-900">
       <View className="px-5 pb-2 items-center">
-        <Text className="text-2xl font-bold text-primary dark:text-primary-dark">Jesus Missions Podcast</Text>
+        <Text className="text-2xl font-bold text-black dark:text-white">Jesus Missions Podcast</Text>
       </View>
 
       {/* Audio Player for Selected Episode */}
@@ -41,13 +41,13 @@ export default function PodcastScreen() {
       )}
 
 
-  {isLoading && <Text className="text-primary dark:text-primary-dark">Loading episodes...</Text>}
+  {isLoading && <Text className="text-black dark:text-white">Loading episodes...</Text>}
 
-  {error && <Text className="text-error dark:text-error-dark">Error: {error.message}</Text>}
+  {error && <Text className="text-red-600 dark:text-red-400">Error: {error.message}</Text>}
 
       {episodes && episodes.length > 0 && (
         <View className="flex-1">
-          <Text className="text-lg font-semibold px-5 pb-2 text-primary dark:text-primary-dark">
+          <Text className="text-lg font-semibold px-5 pb-2 text-black dark:text-white">
             Episodes
           </Text>
           <PodcastEpisodeList
@@ -61,7 +61,7 @@ export default function PodcastScreen() {
       )}
 
       {episodes && episodes.length === 0 && (
-        <Text className="text-primary dark:text-primary-dark">No episodes found.</Text>
+        <Text className="text-black dark:text-white">No episodes found.</Text>
       )}
     </View>
   );
