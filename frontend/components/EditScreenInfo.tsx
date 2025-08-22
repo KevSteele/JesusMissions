@@ -7,13 +7,13 @@ export default function EditScreenInfo({ path }: { path: string }) {
   return (
     <View>
       <View className="items-center mx-12">
-        <Text className="text-lg leading-6 text-center text-black dark:text-white/80">
+          <Text className="text-lg leading-6 text-center text-zinc-900 dark:text-white/80">
           Open up the code for this screen:
         </Text>
         <View className="rounded px-1 my-2 bg-black/5 dark:bg-white/5">
           <Text className="font-mono">{path}</Text>
         </View>
-        <Text className="text-lg leading-6 text-center text-black dark:text-white/80">
+          <Text className="text-lg leading-6 text-center text-zinc-900 dark:text-white/80">
           Change any of the text, save the file, and your app will automatically update.
         </Text>
       </View>

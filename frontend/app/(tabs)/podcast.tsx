@@ -30,24 +30,23 @@ export default function PodcastScreen() {
 
       {/* Audio Player for Selected Episode */}
       {selectedEpisode && (
-  <View className="px-5 pb-5">
+        <View className="px-5 pb-5">
           <AudioPlayer
             audioUrl={selectedEpisode.audioUrl}
             title={selectedEpisode.title}
             artist={selectedEpisode.creator}
-            onPlaybackChange={() => {}}
+            onPlaybackChange={() => { }}
           />
         </View>
       )}
 
+      {isLoading && <Text className="text-zinc-900 dark:text-white">Loading episodes...</Text>}
 
-  {isLoading && <Text className="text-black dark:text-white">Loading episodes...</Text>}
-
-  {error && <Text className="text-red-600 dark:text-red-400">Error: {error.message}</Text>}
+      {error && <Text className="text-red-600 dark:text-red-400">Error: {error.message}</Text>}
 
       {episodes && episodes.length > 0 && (
         <View className="flex-1">
-          <Text className="text-lg font-semibold px-5 pb-2 text-black dark:text-white">
+          <Text className="text-lg font-semibold px-5 pb-2 text-zinc-900 dark:text-white">
             Episodes
           </Text>
           <PodcastEpisodeList
@@ -61,7 +60,7 @@ export default function PodcastScreen() {
       )}
 
       {episodes && episodes.length === 0 && (
-        <Text className="text-black dark:text-white">No episodes found.</Text>
+        <Text className="text-zinc-900 dark:text-white">No episodes found.</Text>
       )}
     </View>
   );

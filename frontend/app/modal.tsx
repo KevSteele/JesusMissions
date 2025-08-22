@@ -8,7 +8,7 @@ import { Text, View } from 'react-native';
 export default function ModalScreen() {
   return (
     <View className="flex-1 items-center justify-center">
-      <Text className="text-xl font-bold text-black dark:text-white">Modal</Text>
+      <Text className="text-xl font-bold text-zinc-900 dark:text-white">Modal</Text>
       <View className="my-8 h-px w-4/5 bg-gray-200 dark:bg-white/10" />
       <EditScreenInfo path="app/modal.tsx" />
 

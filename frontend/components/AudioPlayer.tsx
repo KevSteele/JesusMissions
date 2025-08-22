@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { FontAwesome } from '@expo/vector-icons';
@@ -17,6 +17,7 @@ export default function AudioPlayer({
     artist,
     onPlaybackChange,
 }: AudioPlayerProps) {
+    const colorScheme = useColorScheme();
     const player = useAudioPlayer(audioUrl);
     const status = useAudioPlayerStatus(player);
 
@@ -87,16 +88,15 @@ export default function AudioPlayer({
 
     return (
         <View
-            className="bg-background dark:bg-background-dark rounded-2xl p-5 my-2 shadow"
-            style={{ elevation: 3 }} // Android shadow
+            className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-700"
         >
             {/* Track Info */}
             <View className="items-center mb-5">
-                <Text className="text-lg font-semibold text-center text-primary dark:text-primary-dark mb-1" numberOfLines={2}>
+                <Text className="text-lg font-semibold text-center text-zinc-900 dark:text-white mb-1" numberOfLines={2}>
                     {title}
                 </Text>
                 {artist ? (
-                    <Text className="text-sm text-muted dark:text-muted-dark text-center" numberOfLines={1}>
+                    <Text className="text-sm text-gray-500 dark:text-gray-300 text-center" numberOfLines={1}>
                         {artist}
                     </Text>
                 ) : null}
@@ -104,7 +104,7 @@ export default function AudioPlayer({
 
             {/* Progress Bar */}
             <View className="flex-row items-center mb-5">
-                <Text className="text-xs text-muted dark:text-muted-dark font-medium min-w-[35px] text-center">
+                <Text className="text-xs text-gray-500 dark:text-gray-300 font-medium min-w-[35px] text-center">
                     {formatTime(currentTime)}
                 </Text>
 
@@ -116,13 +116,13 @@ export default function AudioPlayer({
                     onSlidingStart={handleScrubStart}
                     onValueChange={handleScrubChange}
                     onSlidingComplete={handleScrubComplete}
-                    minimumTrackTintColor="#007AFF"
-                    maximumTrackTintColor="#E0E0E0"
-                    thumbTintColor="#007AFF"
+                    minimumTrackTintColor="#52525b" // zinc-600
+                    maximumTrackTintColor="#e4e4e7" // zinc-200
+                    thumbTintColor="#71717a" // zinc-500
                     disabled={!duration}
                 />
 
-                <Text className="text-xs text-muted dark:text-muted-dark font-medium min-w-[35px] text-center">
+                <Text className="text-xs text-gray-500 dark:text-gray-300 font-medium min-w-[35px] text-center">
                     {formatTime(remainingTime)}
                 </Text>
             </View>
@@ -137,20 +137,22 @@ export default function AudioPlayer({
                     <FontAwesome
                         name="rotate-left"
                         size={24}
-                        color={status.currentTime ? '#007AFF' : '#C0C0C0'}
+                        color={
+                            colorScheme === 'dark'
+                                ? (status.currentTime ? '#fff' : '#d4d4d8')
+                                : (status.currentTime ? '#52525b' : '#d4d4d8')
+                        }
                     />
                     <Text
                         className="text-[10px] font-semibold mt-0.5"
-                        style={{ color: status.currentTime ? '#007AFF' : '#C0C0C0' }}
+                        style={{ color: status.currentTime ? '#52525b' : '#d4d4d8' }}
                     >
                         15s
                     </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    className={`w-20 h-20 rounded-full items-center justify-center shadow ${isLoading ? 'bg-gray-400' : 'bg-blue-600'
-                        }`}
-                    style={{ elevation: 8 }}
+                    className={`w-20 h-20 rounded-full items-center justify-center ${isLoading ? 'bg-zinc-400' : 'bg-zinc-600'}`}
                     onPress={handlePlayPause}
                     disabled={isLoading}
                 >
@@ -174,11 +176,15 @@ export default function AudioPlayer({
                     <FontAwesome
                         name="rotate-right"
                         size={24}
-                        color={status.duration ? '#007AFF' : '#C0C0C0'}
+                        color={
+                            colorScheme === 'dark'
+                                ? (status.duration ? '#fff' : '#d4d4d8')
+                                : (status.duration ? '#52525b' : '#d4d4d8')
+                        }
                     />
                     <Text
                         className="text-[10px] font-semibold mt-0.5"
-                        style={{ color: status.duration ? '#007AFF' : '#C0C0C0' }}
+                        style={{ color: status.duration ? '#52525b' : '#d4d4d8' }}
                     >
                         15s
                     </Text>
@@ -187,9 +193,9 @@ export default function AudioPlayer({
 
             {/* Loading State */}
             {isLoading ? (
-                <View className="flex-row items-center justify-center mt-2 pt-2 border-t border-border dark:border-border-dark">
-                    <ActivityIndicator size="small" color="#007AFF" />
-                    <Text className="ml-2 text-sm text-muted dark:text-muted-dark">Loading audio...</Text>
+                <View className="flex-row items-center justify-center mt-2 pt-2 border-t border-zinc-200 dark:border-zinc-700">
+                    <ActivityIndicator size="small" color="#71717a" />
+                    <Text className="ml-2 text-sm text-gray-500 dark:text-gray-300">Loading audio...</Text>
                 </View>
             ) : null}
         </View>

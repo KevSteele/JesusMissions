@@ -43,34 +43,34 @@ export default function PodcastEpisodeList({
 
         return (
             <TouchableOpacity
-                className={`rounded-xl border overflow-hidden ${isSelected ? 'border-blue-500 border-2 bg-blue-50' : 'border-gray-200'} mb-3`}
+                className={`rounded-xl border overflow-hidden ${isSelected ? 'border-zinc-500 border-2 bg-zinc-100 dark:bg-zinc-700/60' : 'border-gray-200'} mb-3`}
                 onPress={() => onEpisodeSelect(item)}
             >
-                <View className={`p-4 ${isSelected ? 'bg-blue-50 dark:bg-blue-900/30' : 'bg-background dark:bg-background-dark'}`}>
+                <View className={`p-4 rounded-xl shadow-sm transition-all duration-150 ${isSelected ? 'bg-zinc-100 dark:bg-zinc-700/60' : 'bg-white dark:bg-zinc-900'}`}>
                     <View className="flex-row justify-between items-center mb-2">
-                        <Text className="text-xs font-semibold uppercase text-muted dark:text-muted-dark">
+                        <Text className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-300">
                             Episode {item.episodeNumber}
                         </Text>
-                        <Text className="text-xs font-medium text-muted dark:text-muted-dark">
+                        <Text className="text-xs font-medium text-gray-500 dark:text-gray-300">
                             {item.duration || 'No duration'}
                         </Text>
                     </View>
 
-                    <Text className="text-lg font-bold mb-2 leading-6 text-primary dark:text-primary-dark">
+                    <Text className="text-lg font-bold mb-2 leading-6 text-zinc-900 dark:text-white">
                         {item.title || 'Untitled Episode'}
                     </Text>
 
                     {item.description && item.description.trim() && (
-                        <Text className="text-sm text-muted dark:text-muted-dark mb-3" numberOfLines={3}>
+                        <Text className="text-sm text-gray-500 dark:text-gray-300 mb-3" numberOfLines={3}>
                             {item.description.replace(/<[^>]*>/g, '').trim() || 'No description available'}
                         </Text>
                     )}
 
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-xs text-muted dark:text-muted-dark">
+                        <Text className="text-xs text-gray-500 dark:text-gray-300">
                             {formatDate(item.publishedDate)}
                         </Text>
-                        <Text className="text-xs italic text-muted dark:text-muted-dark">
+                        <Text className="text-xs italic text-gray-500 dark:text-gray-300">
                             by {item.creator || 'Unknown'}
                         </Text>
                     </View>

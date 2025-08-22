@@ -53,6 +53,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="steps"
+        options={{
+          title: 'Steps',
+          tabBarIcon: ({ color }) => <TabBarIcon name="globe" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="kappaImpact"
+        options={{
+          title: 'Kappa Impact',
+          tabBarIcon: ({ color }) => <TabBarIcon name="film" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="map"
         options={{
           title: 'Unreached',
