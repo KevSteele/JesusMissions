@@ -7,9 +7,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query'; // Import React Query components
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 import { fetchPodcastEpisodes } from '@/api/rss'; // Import the podcast fetch function
 import "../global.css";
+import { setAudioModeAsync } from 'expo-audio';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -58,7 +59,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const queryClient = useQueryClient();
-  
+
   // Prefetch podcast episodes when app starts
   useEffect(() => {
     queryClient.prefetchQuery({
@@ -68,12 +69,24 @@ function RootLayoutNav() {
     });
   }, [queryClient]);
 
+   // 🔊 Ensure audio plays even when phone is on silent/vibrate
+  useEffect(() => {
+    (async () => {
+      await setAudioModeAsync({
+        playsInSilentMode: true,
+        interruptionMode: 'doNotMix',
+      });
+    })();
+  }, []);
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
+      <View className={colorScheme === 'dark' ? 'dark' : ''} style={{ flex: 1 }}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        </Stack>
+      </View>
     </ThemeProvider>
   );
 }
