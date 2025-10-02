@@ -24,8 +24,8 @@ export default function PodcastScreen() {
 
   return (
   <View className="flex-1 bg-white dark:bg-zinc-900">
-      <View className="px-5 pb-2 items-center">
-        <Text className="text-2xl font-bold text-black dark:text-white">Jesus Missions Podcast</Text>
+      <View className="px-5 items-center">
+        <Text className="m-2 text-2xl font-bold text-black dark:text-white">Jesus Missions Podcast</Text>
       </View>
 
       {/* Audio Player for Selected Episode */}
