@@ -10,7 +10,7 @@ export default function HomeScreen() {
   return (
     <ImageBackground source={mountainBackground} className="flex-1" resizeMode="cover">
       <View className="flex-1 items-center justify-start bg-white/70 dark:bg-zinc-900/70">
-        <Text className="text-2xl font-bold text-zinc-900 dark:text-white">Jesus Missions</Text>
+        <Text className="m-2 text-2xl font-bold text-zinc-900 dark:text-white">Jesus Missions</Text>
         <VideoPlayer
           videoId={landOfMartyrdomTeaserId}
           autoPlay={true}
