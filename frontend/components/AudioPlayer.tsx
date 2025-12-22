@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
@@ -24,6 +24,7 @@ export default function AudioPlayer({
     const [isLoading, setIsLoading] = useState(false);
     const [isScrubbing, setIsScrubbing] = useState(false);
     const [scrubValue, setScrubValue] = useState(0);
+    const isFirstMountRef = useRef(true);
 
     useEffect(() => {
         onPlaybackChange?.(status.playing);
@@ -34,6 +35,24 @@ export default function AudioPlayer({
             setScrubValue(status.currentTime);
         }
     }, [status.currentTime, isScrubbing, status.duration]);
+
+
+    useEffect(() => {
+        if (isFirstMountRef.current) {
+            isFirstMountRef.current = false;
+            return;
+        }
+
+        const autoPlay = async () => {
+            try {
+                await player.play();
+            } catch (error) {
+                console.error('Error auto-playing episode:', error);
+            }
+        };
+
+        autoPlay();
+    }, [audioUrl, player]);
 
     const handlePlayPause = useCallback(async () => {
         try {
@@ -88,22 +107,17 @@ export default function AudioPlayer({
 
     return (
         <View
-            className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-700"
+            className="bg-white dark:bg-zinc-900 rounded-2xl p-3 border border-zinc-200 dark:border-zinc-700"
         >
             {/* Track Info */}
-            <View className="items-center mb-5">
+            <View className="items-center mb-1">
                 <Text className="text-lg font-semibold text-center text-zinc-900 dark:text-white mb-1" numberOfLines={2}>
                     {title}
                 </Text>
-                {artist ? (
-                    <Text className="text-sm text-gray-500 dark:text-gray-300 text-center" numberOfLines={1}>
-                        {artist}
-                    </Text>
-                ) : null}
             </View>
 
             {/* Progress Bar */}
-            <View className="flex-row items-center mb-5">
+            <View className="flex-row items-center mb-1">
                 <Text className="text-xs text-gray-500 dark:text-gray-300 font-medium min-w-[35px] text-center">
                     {formatTime(currentTime)}
                 </Text>
@@ -190,14 +204,6 @@ export default function AudioPlayer({
                     </Text>
                 </TouchableOpacity>
             </View>
-
-            {/* Loading State */}
-            {isLoading ? (
-                <View className="flex-row items-center justify-center mt-2 pt-2 border-t border-zinc-200 dark:border-zinc-700">
-                    <ActivityIndicator size="small" color="#71717a" />
-                    <Text className="ml-2 text-sm text-gray-500 dark:text-gray-300">Loading audio...</Text>
-                </View>
-            ) : null}
         </View>
     );
 }

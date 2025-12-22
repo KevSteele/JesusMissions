@@ -43,10 +43,10 @@ export default function PodcastEpisodeList({
 
         return (
             <TouchableOpacity
-                className={`rounded-xl border overflow-hidden ${isSelected ? 'border-zinc-500 border-2 bg-zinc-100 dark:bg-zinc-700/60' : 'border-gray-200'} mb-3`}
+                className={`rounded-xl border overflow-hidden ${isSelected ? 'border-zinc-500 border-2 bg-zinc-100 dark:bg-zinc-700/60' : 'border-gray-200'}`}
                 onPress={() => onEpisodeSelect(item)}
             >
-                <View className={`p-4 rounded-xl shadow-sm transition-all duration-150 ${isSelected ? 'bg-zinc-100 dark:bg-zinc-700/60' : 'bg-white dark:bg-zinc-900'}`}>
+                <View className={`p-3 rounded-xl shadow-sm transition-all duration-150 ${isSelected ? 'bg-zinc-100 dark:bg-zinc-700/60' : 'bg-white dark:bg-zinc-900'}`}>
                     <View className="flex-row justify-between items-center mb-2">
                         <Text className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-300">
                             Episode {item.episodeNumber}
