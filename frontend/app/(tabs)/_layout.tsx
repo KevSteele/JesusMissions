@@ -28,6 +28,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
+          headerTitle: 'Jesus Missions',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -49,6 +50,7 @@ export default function TabLayout() {
         name="podcast"
         options={{
           title: 'Podcast',
+          headerTitle: 'Jesus Missions Podcast',
           tabBarIcon: ({ color }) => <TabBarIcon name="microphone" color={color} />,
         }}
       />
@@ -57,6 +59,7 @@ export default function TabLayout() {
         options={{
           title: 'Steps',
           tabBarIcon: ({ color }) => <TabBarIcon name="globe" color={color} />,
+          headerShown: false,
         }}
       />
       <Tabs.Screen

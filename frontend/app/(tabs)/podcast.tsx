@@ -23,14 +23,12 @@ export default function PodcastScreen() {
   }, [episodes, selectedEpisode]);
 
   return (
-  <View className="flex-1 bg-white dark:bg-zinc-900">
-      <View className="px-5 items-center">
-        <Text className="m-2 text-2xl font-bold text-black dark:text-white">Jesus Missions Podcast</Text>
-      </View>
+    <View className="flex-1 bg-white dark:bg-zinc-900">
+      <View className="m-2"></View>
 
       {/* Audio Player for Selected Episode */}
       {selectedEpisode && (
-        <View className="px-5 pb-5">
+        <View className="px-4 pb-2">
           <AudioPlayer
             audioUrl={selectedEpisode.audioUrl}
             title={selectedEpisode.title}
@@ -46,9 +44,10 @@ export default function PodcastScreen() {
 
       {episodes && episodes.length > 0 && (
         <View className="flex-1">
-          <Text className="text-lg font-semibold px-5 pb-2 text-zinc-900 dark:text-white">
+          <Text className="text-lg font-semibold px-4 pt-2 text-zinc-900 dark:text-white leading-tight">
             Episodes
           </Text>
+
           <PodcastEpisodeList
             episodes={episodes}
             selectedEpisode={selectedEpisode}
