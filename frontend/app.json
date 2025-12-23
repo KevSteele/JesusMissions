@@ -15,7 +15,10 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio",
+          "audio"
+        ]
       }
     },
     "android": {
@@ -48,11 +51,12 @@
         "projectId": "315e7651-f701-4a7c-8af2-5983ee63c57b"
       }
     },
+    "updates": {
+      "url": "https://u.expo.dev/315e7651-f701-4a7c-8af2-5983ee63c57b",
+      "enabled": true
+    },
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/315e7651-f701-4a7c-8af2-5983ee63c57b"
     }
   }
 }
