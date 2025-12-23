@@ -20,7 +20,7 @@ Take time to pray and ask God to open your heart to His global vision.`,
     },
     {
         id: 2,
-        title: 'Vision for your congregation: The Salvation Snow Ball',
+        title: 'The Salvation Snow Ball',
         description: 'Discover how your church can create momentum in missions that grows exponentially.',
         content: `The Salvation Snowball is a powerful vision for how churches can build missions momentum that multiplies over time.
 
