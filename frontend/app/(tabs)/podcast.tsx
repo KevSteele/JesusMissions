@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, ImageBackground } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchPodcastEpisodes } from '@/api/rss';
 import { PodcastEpisode } from '@/types/podcast';
 import PodcastEpisodeList from '@/components/PodcastEpisodeList';
 import AudioPlayer from '@/components/AudioPlayer';
+import mountainBackground from '@/assets/images/mountainBackground.jpg';
 
 export default function PodcastScreen() {
   const [selectedEpisode, setSelectedEpisode] = useState<PodcastEpisode | null>(null);
@@ -23,44 +24,57 @@ export default function PodcastScreen() {
   }, [episodes, selectedEpisode]);
 
   return (
-    <View className="flex-1 bg-white dark:bg-zinc-900">
-      <View className="m-2"></View>
-
-      {/* Audio Player for Selected Episode */}
-      {selectedEpisode && (
-        <View className="px-4 pb-2">
-          <AudioPlayer
-            audioUrl={selectedEpisode.audioUrl}
-            title={selectedEpisode.title}
-            artist={selectedEpisode.creator}
-            onPlaybackChange={() => { }}
-          />
-        </View>
-      )}
-
-      {isLoading && <Text className="text-zinc-900 dark:text-white">Loading episodes...</Text>}
-
-      {error && <Text className="text-red-600 dark:text-red-400">Error: {error.message}</Text>}
-
-      {episodes && episodes.length > 0 && (
-        <View className="flex-1">
-          <Text className="text-lg font-semibold px-4 pt-2 text-zinc-900 dark:text-white leading-tight">
-            Episodes
+    <ImageBackground source={mountainBackground} className="flex-1" resizeMode="cover">
+      <View className="flex-1 bg-white/30 dark:bg-zinc-900/30">
+        {/* Compact Header */}
+        <View className="px-6 py-4">
+          <Text className="text-2xl font-bold text-white text-center">
+            Podcast
           </Text>
-
-          <PodcastEpisodeList
-            episodes={episodes}
-            selectedEpisode={selectedEpisode}
-            onEpisodeSelect={setSelectedEpisode}
-            onRefresh={refetch}
-            isRefreshing={isFetching}
-          />
         </View>
-      )}
 
-      {episodes && episodes.length === 0 && (
-        <Text className="text-zinc-900 dark:text-white">No episodes found.</Text>
-      )}
-    </View>
+        {/* Audio Player for Selected Episode */}
+        {selectedEpisode && (
+          <View className="px-4 pb-3">
+            <AudioPlayer
+              audioUrl={selectedEpisode.audioUrl}
+              title={selectedEpisode.title}
+              artist={selectedEpisode.creator}
+              onPlaybackChange={() => { }}
+            />
+          </View>
+        )}
+
+        {isLoading && (
+          <View className="px-6">
+            <Text className="text-white text-center">Loading episodes...</Text>
+          </View>
+        )}
+
+        {error && (
+          <View className="px-6">
+            <Text className="text-red-400 text-center">Error: {error.message}</Text>
+          </View>
+        )}
+
+        {episodes && episodes.length > 0 && (
+          <View className="flex-1">
+            <PodcastEpisodeList
+              episodes={episodes}
+              selectedEpisode={selectedEpisode}
+              onEpisodeSelect={setSelectedEpisode}
+              onRefresh={refetch}
+              isRefreshing={isFetching}
+            />
+          </View>
+        )}
+
+        {episodes && episodes.length === 0 && (
+          <View className="px-6">
+            <Text className="text-white text-center">No episodes found.</Text>
+          </View>
+        )}
+      </View>
+    </ImageBackground>
   );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { Text, View } from 'react-native';
 import { PodcastEpisode } from '@/types/podcast';
@@ -18,6 +18,7 @@ export default function PodcastEpisodeList({
     onRefresh,
     isRefreshing = false
 }: PodcastEpisodeListProps) {
+    const [expandedEpisodeId, setExpandedEpisodeId] = useState<string | null>(null);
 
     const formatDate = (dateString: string) => {
         if (!dateString || dateString.trim() === '') {
@@ -40,42 +41,72 @@ export default function PodcastEpisodeList({
 
     const renderEpisode = ({ item }: { item: PodcastEpisode }) => {
         const isSelected = selectedEpisode?.id === item.id;
+        const isExpanded = expandedEpisodeId === item.id;
 
         return (
-            <TouchableOpacity
-                className={`rounded-xl border overflow-hidden ${isSelected ? 'border-zinc-500 border-2 bg-zinc-100 dark:bg-zinc-700/60' : 'border-gray-200'}`}
-                onPress={() => onEpisodeSelect(item)}
+            <View
+                className={`rounded-xl border overflow-hidden ${isSelected ? 'border-blue-600 border-2 bg-white dark:bg-zinc-800' : 'border-gray-200 bg-white/50 dark:bg-zinc-800/50'}`}
             >
-                <View className={`p-3 rounded-xl shadow-sm transition-all duration-150 ${isSelected ? 'bg-zinc-100 dark:bg-zinc-700/60' : 'bg-white dark:bg-zinc-900'}`}>
-                    <View className="flex-row justify-between items-center mb-2">
-                        <Text className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-300">
-                            Episode {item.episodeNumber}
-                        </Text>
-                        <Text className="text-xs font-medium text-gray-500 dark:text-gray-300">
-                            {item.duration || 'No duration'}
-                        </Text>
-                    </View>
+                <View className={`p-3 rounded-xl shadow-sm transition-all duration-150 ${isSelected ? 'bg-white dark:bg-zinc-900' : 'bg-white/50 dark:bg-zinc-900/50'}`}>
+                    <View className="flex-row gap-3">
+                        {/* Play Button - Left Side (clickable area) */}
+                        <TouchableOpacity
+                            onPress={() => onEpisodeSelect(item)}
+                            className="justify-center"
+                            activeOpacity={0.7}
+                        >
+                            <View className="bg-blue-600 rounded-full w-14 h-14 items-center justify-center shadow-lg">
+                                <Text className="text-white text-2xl font-bold" style={{ marginLeft: 2 }}>▶</Text>
+                            </View>
+                        </TouchableOpacity>
 
-                    <Text className="text-lg font-bold mb-2 leading-6 text-zinc-900 dark:text-white">
-                        {item.title || 'Untitled Episode'}
-                    </Text>
+                        {/* Episode Details - Right Side (clickable area for expand) */}
+                        <TouchableOpacity
+                            className="flex-1"
+                            onPress={() => setExpandedEpisodeId(isExpanded ? null : item.id)}
+                            activeOpacity={0.95}
+                        >
+                            <View className="flex-row justify-between items-center mb-2">
+                                <Text className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-300">
+                                    Episode {item.episodeNumber}
+                                </Text>
+                                <Text className="text-xs font-medium text-gray-500 dark:text-gray-300">
+                                    {item.duration || 'No duration'}
+                                </Text>
+                            </View>
 
-                    {item.description && item.description.trim() && (
-                        <Text className="text-sm text-gray-500 dark:text-gray-300 mb-3" numberOfLines={3}>
-                            {item.description.replace(/<[^>]*>/g, '').trim() || 'No description available'}
-                        </Text>
-                    )}
+                            <Text className="text-lg font-bold mb-2 leading-6 text-zinc-900 dark:text-white">
+                                {item.title || 'Untitled Episode'}
+                            </Text>
 
-                    <View className="flex-row justify-between items-center">
-                        <Text className="text-xs text-gray-500 dark:text-gray-300">
-                            {formatDate(item.publishedDate)}
-                        </Text>
-                        <Text className="text-xs italic text-gray-500 dark:text-gray-300">
-                            by {item.creator || 'Unknown'}
-                        </Text>
+                            {isExpanded && item.description && item.description.trim() && (
+                                <Text className="text-sm text-gray-500 dark:text-gray-300 mb-3">
+                                    {item.description.replace(/<[^>]*>/g, '').trim() || 'No description available'}
+                                </Text>
+                            )}
+
+                            <View className="flex-row justify-between items-center">
+                                <View className="flex-row items-center gap-2">
+                                    <Text className="text-xs text-gray-500 dark:text-gray-300">
+                                        {formatDate(item.publishedDate)}
+                                    </Text>
+                                    <Text className="text-xs italic text-gray-500 dark:text-gray-300">
+                                        by {item.creator || 'Unknown'}
+                                    </Text>
+                                </View>
+                                
+                                {item.description && item.description.trim() && (
+                                    <View className="px-2 py-1">
+                                        <Text className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                                            {isExpanded ? '▲ Less' : '▼ More'}
+                                        </Text>
+                                    </View>
+                                )}
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
         );
     };
 

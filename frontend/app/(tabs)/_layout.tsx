@@ -63,17 +63,17 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="kappaImpact"
-        options={{
-          title: 'Kappa Impact',
-          tabBarIcon: ({ color }) => <TabBarIcon name="film" color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="map"
         options={{
           title: 'Unreached',
           tabBarIcon: ({ color }) => <TabBarIcon name="map" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="kappaImpact"
+        options={{
+          title: 'Kappa Impact',
+          tabBarIcon: ({ color }) => <TabBarIcon name="film" color={color} />,
         }}
       />
     </Tabs>
