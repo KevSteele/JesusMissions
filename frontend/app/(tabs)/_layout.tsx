@@ -63,7 +63,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="map"
+        name="unreached"
         options={{
           title: 'Unreached',
           tabBarIcon: ({ color }) => <TabBarIcon name="map" color={color} />,
