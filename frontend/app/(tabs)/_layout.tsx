@@ -66,6 +66,7 @@ export default function TabLayout() {
         name="unreached"
         options={{
           title: 'Unreached',
+          headerTitle: 'Unreached People Groups',
           tabBarIcon: ({ color }) => <TabBarIcon name="map" color={color} />,
         }}
       />

@@ -9,6 +9,7 @@ import 'react-native-reanimated';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query'; // Import React Query components
 import { useColorScheme, View } from 'react-native';
 import { fetchPodcastEpisodes } from '@/api/rss'; // Import the podcast fetch function
+import { fetchPeopleGroups } from '@/api/joshuaProject'; // Import people groups fetch function
 import "../global.css";
 import { setAudioModeAsync } from 'expo-audio';
 
@@ -66,6 +67,15 @@ function RootLayoutNav() {
       queryKey: ['podcast-episodes'],
       queryFn: fetchPodcastEpisodes,
       staleTime: 1000 * 60 * 60 * 12, // Consider data fresh for 12 hours
+    });
+  }, [queryClient]);
+
+  // Prefetch unreached people groups in background
+  useEffect(() => {
+    queryClient.prefetchQuery({
+      queryKey: ['unreachedPeopleGroups'],
+      queryFn: fetchPeopleGroups,
+      staleTime: 1000 * 60 * 60, // 1 hour
     });
   }, [queryClient]);
 

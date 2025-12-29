@@ -151,7 +151,7 @@ export default function HomeScreen() {
               <View className="flex-row gap-3">
                 <TouchableOpacity 
                   className="flex-1 bg-white px-4 py-3 rounded-lg"
-                  onPress={() => router.push('/map')}
+                  onPress={() => router.push('/(tabs)/unreached')}
                 >
                   <Text className="text-blue-600 font-semibold text-center">See Where</Text>
                 </TouchableOpacity>
