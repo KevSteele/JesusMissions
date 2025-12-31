@@ -22,7 +22,7 @@ export default function HomeScreen() {
             <Text className="text-4xl font-bold text-white text-center mb-4">
               The Mission of Jesus{'\n'}Is Not Finished
             </Text>
-            <Text className="text-6xl font-bold text-white mb-2">3.2B</Text>
+            <Text className="text-6xl font-bold text-white mb-2">3.4 Billion</Text>
             <Text className="text-xl text-white/90 text-center mb-8">
               people still haven't heard{'\n'}the Gospel
             </Text>
