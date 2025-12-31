@@ -14,6 +14,7 @@ import {
   isValidPeopleGroupForMap,
 } from '@/services/unreachedMap';
 import { PeopleGroup } from '@/types/peopleGroup';
+import { UnreachedMapViewProps } from '@/components/unreachedMap/MapViewProps';
 
 // Conditional imports for native-only modules
 let PROVIDER_GOOGLE: any;
@@ -22,12 +23,111 @@ let ClusteredMapView: any;
 
 if (Platform.OS !== 'web') {
   const Maps = require('react-native-maps');
-  const { default: ClusterMap, Marker: ClusterMarker } = require('react-native-map-clustering');
-  
+  const { default: ClusterMap } = require('react-native-map-clustering');
+
   PROVIDER_GOOGLE = Maps.PROVIDER_GOOGLE;
   ClusteredMapView = ClusterMap;
-  // Always use the Marker from react-native-maps (clustering lib uses it internally)
   Marker = Maps.Marker;
+}
+
+// 10/40 Window: Centered over the region with the highest concentration of unreached people groups
+const DEFAULT_INITIAL_REGION = {
+  latitude: 25,
+  longitude: 50,
+  latitudeDelta: 60,
+  longitudeDelta: 90,
+};
+
+/**
+ * iOS Map Implementation - Black Box Component
+ * Accepts standard props and renders map with clustering optimized for iOS
+ */
+function IOSMapView({
+  peopleGroups,
+  isLoading,
+  onMarkerPress,
+  initialRegion = DEFAULT_INITIAL_REGION
+}: UnreachedMapViewProps) {
+  // Cluster rendering logic
+  const renderCluster = useCallback((cluster: any) => {
+    if (!peopleGroups || peopleGroups.length === 0) {
+      return null;
+    }
+
+    const { id, geometry, onPress, properties } = cluster;
+    const pointCount = properties?.point_count || 0;
+
+    if (!geometry?.coordinates || geometry.coordinates.length < 2) {
+      return null;
+    }
+
+    const [longitude, latitude] = geometry.coordinates;
+    const clusterColor = calculateClusterColor(latitude, longitude, peopleGroups);
+
+    return (
+      <Marker
+        key={`cluster-${id}`}
+        coordinate={{ latitude, longitude }}
+        onPress={onPress}
+        tracksViewChanges={false}
+      >
+        <View
+          className="w-[50px] h-[50px] rounded-full justify-center items-center border-[3px] border-white"
+          style={{ backgroundColor: clusterColor }}
+        >
+          <Text className="text-white text-base font-bold">
+            {pointCount}
+          </Text>
+        </View>
+      </Marker>
+    );
+  }, [peopleGroups]);
+
+  // Individual marker rendering
+  const renderIndividualMarker = useCallback((peopleGroup: PeopleGroup) => {
+    if (!isValidPeopleGroupForMap(peopleGroup)) {
+      return null;
+    }
+
+    const markerColor = getMarkerColorForPeopleGroup(peopleGroup);
+
+    return (
+      <Marker
+        key={peopleGroup.PeopleID3ROG3}
+        coordinate={{
+          latitude: peopleGroup.Latitude,
+          longitude: peopleGroup.Longitude,
+        }}
+        onPress={() => onMarkerPress(peopleGroup)}
+        tracksViewChanges={false}
+      >
+        <View
+          className="w-6 h-6 rounded-full border-2 border-white"
+          style={{ backgroundColor: markerColor }}
+        />
+      </Marker>
+    );
+  }, [onMarkerPress]);
+
+  return (
+    <ClusteredMapView
+      provider={PROVIDER_GOOGLE}
+      style={StyleSheet.absoluteFillObject}
+      initialRegion={initialRegion}
+      showsUserLocation={false}
+      showsMyLocationButton={false}
+      rotateEnabled={true}
+      pitchEnabled={true}
+      radius={40}
+      maxZoom={20}
+      minZoom={1}
+      extent={512}
+      nodeSize={64}
+      renderCluster={renderCluster}
+    >
+      {peopleGroups.map(renderIndividualMarker)}
+    </ClusteredMapView>
+  );
 }
 
 export default function UnreachedScreen() {
@@ -47,7 +147,7 @@ export default function UnreachedScreen() {
     );
   }
 
-  // Data and state hooks
+  // Data and state hooks - these provide data to the black box map
   const { peopleGroups, isLoading } = useUnreachedMapData();
   const { legendVisible, slideAnimation, setContentWidth, toggleLegend } = useLegendControl();
   const {
@@ -56,108 +156,25 @@ export default function UnreachedScreen() {
     handleMarkerPress,
     handleCloseBottomSheet,
   } = useBottomSheetControl();
-  
-  // Cluster rendering logic
-  const renderCluster = useCallback((cluster: any) => {
-    // Safety check: ensure we have data
-    if (!peopleGroups || peopleGroups.length === 0) {
-      return null;
-    }
-
-    const { id, geometry, onPress, properties } = cluster;
-    const pointCount = properties?.point_count || 0;
-    
-    if (!geometry?.coordinates || geometry.coordinates.length < 2) {
-      return null;
-    }
-    
-    const [longitude, latitude] = geometry.coordinates;
-
-    // Calculate cluster color based on nearby groups
-    const clusterColor = calculateClusterColor(latitude, longitude, peopleGroups);
-
-    return (
-      <Marker
-        key={`cluster-${id}`}
-        coordinate={{
-          latitude,
-          longitude,
-        }}
-        onPress={onPress}renderIndividualMarker
-        tracksViewChanges={false}
-      >
-        <View
-          className="w-[50px] h-[50px] rounded-full justify-center items-center border-[3px] border-white"
-          style={{ backgroundColor: clusterColor }}
-        >
-          <Text className="text-white text-base font-bold">
-            {pointCount}
-          </Text>
-        </View>
-      </Marker>
-    );
-  }, [peopleGroups]);
-
-  // Individual marker rendering
-  const renderIndividualMarker = useCallback((peopleGroup: PeopleGroup) => {
-    // Skip invalid markers
-    if (!isValidPeopleGroupForMap(peopleGroup)) {
-      return null;
-    }
-
-    const markerColor = getMarkerColorForPeopleGroup(peopleGroup);
-
-    return (
-      <Marker
-        key={peopleGroup.PeopleID3ROG3}
-        coordinate={{
-          latitude: peopleGroup.Latitude,
-          longitude: peopleGroup.Longitude,
-        }}
-        onPress={() => handleMarkerPress(peopleGroup)}
-        tracksViewChanges={false}
-      >
-        <View
-          className="w-6 h-6 rounded-full border-2 border-white"
-          style={{ backgroundColor: markerColor }}
-        />
-      </Marker>
-    );
-  }, [handleMarkerPress]);
 
   return (
     <GestureHandlerRootView className="flex-1">
       <View className="flex-1">
-        <ClusteredMapView
-          provider={PROVIDER_GOOGLE}
-          style={StyleSheet.absoluteFillObject}
-          initialRegion={{
-            latitude: 20,
-            longitude: 0,
-            latitudeDelta: 80,
-            longitudeDelta: 80,
-          }}
-          showsUserLocation={false}
-          showsMyLocationButton={false}
-          rotateEnabled={true}
-          pitchEnabled={true}
-          radius={40}
-          maxZoom={20}
-          minZoom={1}
-          extent={512}
-          nodeSize={64}
-          renderCluster={renderCluster}
-        >
-          {peopleGroups.map(renderIndividualMarker)}
-        </ClusteredMapView>
+        {/* Black box map component - receives data, renders markers with clustering */}
+        <IOSMapView
+          peopleGroups={peopleGroups}
+          isLoading={isLoading}
+          onMarkerPress={handleMarkerPress}
+          initialRegion={DEFAULT_INITIAL_REGION}
+        />
 
         {/* Legend overlay */}
-        <Animated.View 
+        <Animated.View
           className="absolute top-4 left-0 flex-row"
           style={{ transform: [{ translateX: slideAnimation }] }}
         >
           <View className="bg-white dark:bg-zinc-800 shadow-lg flex-row overflow-hidden rounded-r-xl">
-            <View 
+            <View
               className="p-4"
               onLayout={(e) => setContentWidth(e.nativeEvent.layout.width)}
             >
@@ -168,22 +185,22 @@ export default function UnreachedScreen() {
               {/* Legend */}
               <View className="flex-row items-center gap-3">
                 <View className="flex-row items-center">
-                  <View 
-                    className="w-3 h-3 rounded-full mr-1" 
+                  <View
+                    className="w-3 h-3 rounded-full mr-1"
                     style={{ backgroundColor: MARKER_COLORS.UNREACHED }}
                   />
                   <Text className="text-xs text-gray-700 dark:text-gray-300">Unreached</Text>
                 </View>
                 <View className="flex-row items-center">
-                  <View 
-                    className="w-3 h-3 rounded-full mr-1" 
+                  <View
+                    className="w-3 h-3 rounded-full mr-1"
                     style={{ backgroundColor: MARKER_COLORS.MINIMAL }}
                   />
                   <Text className="text-xs text-gray-700 dark:text-gray-300">Minimal</Text>
                 </View>
                 <View className="flex-row items-center">
-                  <View 
-                    className="w-3 h-3 rounded-full mr-1" 
+                  <View
+                    className="w-3 h-3 rounded-full mr-1"
                     style={{ backgroundColor: MARKER_COLORS.REACHED }}
                   />
                   <Text className="text-xs text-gray-700 dark:text-gray-300">Reached</Text>
