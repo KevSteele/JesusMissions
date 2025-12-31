@@ -1,3 +1,8 @@
+/**
+ * @deprecated This file's functionality has been moved to services/unreachedMap/peopleGroupDataService.ts
+ * For new code, please import from:
+ * import { fetchPeopleGroupsFromJoshuaProject } from '@/services/unreachedMap';
+ */
 import axios from 'axios';
 
 const JOSHUA_API_URL = process.env.EXPO_PUBLIC_JOSHUA_API_URL;
@@ -15,6 +20,7 @@ export const fetchJoshuaData = async () => {
 };
 
 // Fetch people groups from Joshua Project API
+// This function is kept for backward compatibility
 export const fetchPeopleGroups = async () => {
   try {
     const response = await axios.get(`${JOSHUA_API_URL}/people_groups.json`, {

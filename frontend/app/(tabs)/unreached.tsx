@@ -1,44 +1,63 @@
-import React, { useRef, useCallback, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, ActivityIndicator } from 'react-native';
-import { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
-import ClusteredMapView from 'react-native-map-clustering';
-import BottomSheet from '@gorhom/bottom-sheet';
+import React, { useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, ActivityIndicator, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useUnreachedMapData } from '@/hooks/useUnreachedMapData';
 import { PeopleGroupBottomSheet } from '@/components/unreachedMap/PeopleGroupBottomSheet';
+import {
+  useUnreachedMapData,
+  useLegendControl,
+  useBottomSheetControl,
+} from '@/hooks/unreachedMap';
+import {
+  MARKER_COLORS,
+  getMarkerColorForPeopleGroup,
+  calculateClusterColor,
+  isValidPeopleGroupForMap,
+} from '@/services/unreachedMap';
 import { PeopleGroup } from '@/types/peopleGroup';
 
+// Conditional imports for native-only modules
+let PROVIDER_GOOGLE: any;
+let Marker: any;
+let ClusteredMapView: any;
+
+if (Platform.OS !== 'web') {
+  const Maps = require('react-native-maps');
+  const { default: ClusterMap, Marker: ClusterMarker } = require('react-native-map-clustering');
+  
+  PROVIDER_GOOGLE = Maps.PROVIDER_GOOGLE;
+  ClusteredMapView = ClusterMap;
+  // Always use the Marker from react-native-maps (clustering lib uses it internally)
+  Marker = Maps.Marker;
+}
+
 export default function UnreachedScreen() {
+  // Web fallback
+  if (Platform.OS === 'web') {
+    return (
+      <View className="flex-1 justify-center items-center bg-gray-50 dark:bg-zinc-900 p-6">
+        <View className="bg-white dark:bg-zinc-800 p-8 rounded-2xl shadow-lg max-w-md">
+          <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">
+            Map View Not Available
+          </Text>
+          <Text className="text-gray-600 dark:text-gray-400 text-center leading-relaxed">
+            The interactive map feature is only available on iOS and Android. Please use the mobile app to explore unreached people groups on the map.
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
+  // Data and state hooks
   const { peopleGroups, isLoading } = useUnreachedMapData();
-  const [selectedPeopleGroup, setSelectedPeopleGroup] = useState<PeopleGroup | null>(null);
-  const [legendVisible, setLegendVisible] = useState(true);
-  const [contentWidth, setContentWidth] = useState(0);
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const toggleLegend = useCallback(() => {
-    // Slide by content width so only toggle button remains visible
-    const toValue = legendVisible ? -contentWidth : 0;
-    Animated.timing(slideAnim, {
-      toValue,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-    setLegendVisible(!legendVisible);
-  }, [legendVisible, slideAnim, contentWidth]);
-
-  const handleMarkerPress = useCallback((peopleGroup: PeopleGroup) => {
-    if (!peopleGroup) return;
-    setSelectedPeopleGroup(peopleGroup);
-    bottomSheetRef.current?.expand();
-  }, []);
-
-  const handleCloseBottomSheet = useCallback(() => {
-    bottomSheetRef.current?.close();
-    setSelectedPeopleGroup(null);
-  }, []);
-
-  // Calculate cluster color based on nearby groups in same region/state/country
+  const { legendVisible, slideAnimation, setContentWidth, toggleLegend } = useLegendControl();
+  const {
+    bottomSheetRef,
+    selectedPeopleGroup,
+    handleMarkerPress,
+    handleCloseBottomSheet,
+  } = useBottomSheetControl();
+  
+  // Cluster rendering logic
   const renderCluster = useCallback((cluster: any) => {
     // Safety check: ensure we have data
     if (!peopleGroups || peopleGroups.length === 0) {
@@ -46,7 +65,7 @@ export default function UnreachedScreen() {
     }
 
     const { id, geometry, onPress, properties } = cluster;
-    const points = properties?.point_count || 0;
+    const pointCount = properties?.point_count || 0;
     
     if (!geometry?.coordinates || geometry.coordinates.length < 2) {
       return null;
@@ -54,67 +73,8 @@ export default function UnreachedScreen() {
     
     const [longitude, latitude] = geometry.coordinates;
 
-    // Find closest group to determine regional context
-    let closestGroup = peopleGroups[0];
-    let minDistance = Infinity;
-    
-    peopleGroups.forEach((group) => {
-      // Skip groups with invalid coordinates
-      if (!group || typeof group.Latitude !== 'number' || typeof group.Longitude !== 'number') {
-        return;
-      }
-      
-      const latDiff = Math.abs(group.Latitude - latitude);
-      const lngDiff = Math.abs(group.Longitude - longitude);
-      const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
-      
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestGroup = group;
-      }
-    });
-
-    // Safety check: ensure closestGroup has required properties
-    if (!closestGroup || !closestGroup.ISO3) {
-      return null;
-    }
-
-    // Filter groups by same administrative region
-    // Priority: LocationInCountry (state/province) > Country (ISO3)
-    const nearbyGroups = peopleGroups.filter((group) => {
-      // Safety check for group properties
-      if (!group || !group.ISO3) return false;
-      
-      // Must be same country
-      if (group.ISO3 !== closestGroup.ISO3) return false;
-      
-      // If LocationInCountry exists (e.g., "Illinois"), use it for tighter clustering
-      if (closestGroup.LocationInCountry && group.LocationInCountry) {
-        return group.LocationInCountry === closestGroup.LocationInCountry;
-      }
-      
-      // Otherwise, cluster by country (useful for small countries)
-      return true;
-    });
-
-    // Calculate dominant JPScale in nearby groups
-    const unreachedCount = nearbyGroups.filter(g => g && typeof g.JPScale === 'number' && g.JPScale <= 2).length;
-    const minimalCount = nearbyGroups.filter(g => g && typeof g.JPScale === 'number' && g.JPScale === 3).length;
-    const reachedCount = nearbyGroups.filter(g => g && typeof g.JPScale === 'number' && g.JPScale >= 4).length;
-    
-    // Use majority rule with proper tie handling
-    let clusterColor = '#DC2626'; // Default red
-    
-    // Find which category has the most
-    const maxCount = Math.max(unreachedCount, minimalCount, reachedCount);
-    
-    if (reachedCount === maxCount && reachedCount > 0) {
-      clusterColor = '#16A34A'; // Green for reached majority
-    } else if (minimalCount === maxCount && minimalCount > 0) {
-      clusterColor = '#F97316'; // Orange for minimal majority
-    } else if (unreachedCount === maxCount && unreachedCount > 0) {
-      clusterColor = '#DC2626'; // Red for unreached majority
-    }
+    // Calculate cluster color based on nearby groups
+    const clusterColor = calculateClusterColor(latitude, longitude, peopleGroups);
 
     return (
       <Marker
@@ -123,7 +83,7 @@ export default function UnreachedScreen() {
           latitude,
           longitude,
         }}
-        onPress={onPress}
+        onPress={onPress}renderIndividualMarker
         tracksViewChanges={false}
       >
         <View
@@ -131,12 +91,39 @@ export default function UnreachedScreen() {
           style={{ backgroundColor: clusterColor }}
         >
           <Text className="text-white text-base font-bold">
-            {points}
+            {pointCount}
           </Text>
         </View>
       </Marker>
     );
   }, [peopleGroups]);
+
+  // Individual marker rendering
+  const renderIndividualMarker = useCallback((peopleGroup: PeopleGroup) => {
+    // Skip invalid markers
+    if (!isValidPeopleGroupForMap(peopleGroup)) {
+      return null;
+    }
+
+    const markerColor = getMarkerColorForPeopleGroup(peopleGroup);
+
+    return (
+      <Marker
+        key={peopleGroup.PeopleID3ROG3}
+        coordinate={{
+          latitude: peopleGroup.Latitude,
+          longitude: peopleGroup.Longitude,
+        }}
+        onPress={() => handleMarkerPress(peopleGroup)}
+        tracksViewChanges={false}
+      >
+        <View
+          className="w-6 h-6 rounded-full border-2 border-white"
+          style={{ backgroundColor: markerColor }}
+        />
+      </Marker>
+    );
+  }, [handleMarkerPress]);
 
   return (
     <GestureHandlerRootView className="flex-1">
@@ -161,42 +148,13 @@ export default function UnreachedScreen() {
           nodeSize={64}
           renderCluster={renderCluster}
         >
-          {Array.isArray(peopleGroups) && peopleGroups.map((peopleGroup) => {
-            // Skip invalid markers
-            if (!peopleGroup || typeof peopleGroup.Latitude !== 'number' || typeof peopleGroup.Longitude !== 'number') {
-              return null;
-            }
-            
-            return (
-            <Marker
-              key={peopleGroup.PeopleID3ROG3}
-              coordinate={{
-                latitude: peopleGroup.Latitude,
-                longitude: peopleGroup.Longitude,
-              }}
-              onPress={() => handleMarkerPress(peopleGroup)}
-              tracksViewChanges={false}
-            >
-              <View
-                className="w-6 h-6 rounded-full border-2 border-white"
-                style={{
-                  backgroundColor:
-                    peopleGroup.JPScale <= 2
-                      ? '#DC2626'
-                      : peopleGroup.JPScale === 3
-                      ? '#F97316'
-                      : '#16A34A',
-                }}
-              />
-            </Marker>
-            );
-          })}
+          {peopleGroups.map(renderIndividualMarker)}
         </ClusteredMapView>
 
-        {/* Info overlay */}
+        {/* Legend overlay */}
         <Animated.View 
           className="absolute top-4 left-0 flex-row"
-          style={{ transform: [{ translateX: slideAnim }] }}
+          style={{ transform: [{ translateX: slideAnimation }] }}
         >
           <View className="bg-white dark:bg-zinc-800 shadow-lg flex-row overflow-hidden rounded-r-xl">
             <View 
@@ -210,21 +168,30 @@ export default function UnreachedScreen() {
               {/* Legend */}
               <View className="flex-row items-center gap-3">
                 <View className="flex-row items-center">
-                  <View className="w-3 h-3 rounded-full bg-red-600 mr-1" />
+                  <View 
+                    className="w-3 h-3 rounded-full mr-1" 
+                    style={{ backgroundColor: MARKER_COLORS.UNREACHED }}
+                  />
                   <Text className="text-xs text-gray-700 dark:text-gray-300">Unreached</Text>
                 </View>
                 <View className="flex-row items-center">
-                  <View className="w-3 h-3 rounded-full bg-orange-500 mr-1" />
+                  <View 
+                    className="w-3 h-3 rounded-full mr-1" 
+                    style={{ backgroundColor: MARKER_COLORS.MINIMAL }}
+                  />
                   <Text className="text-xs text-gray-700 dark:text-gray-300">Minimal</Text>
                 </View>
                 <View className="flex-row items-center">
-                  <View className="w-3 h-3 rounded-full bg-green-600 mr-1" />
+                  <View 
+                    className="w-3 h-3 rounded-full mr-1" 
+                    style={{ backgroundColor: MARKER_COLORS.REACHED }}
+                  />
                   <Text className="text-xs text-gray-700 dark:text-gray-300">Reached</Text>
                 </View>
               </View>
             </View>
 
-            {/* Toggle button - part of same container */}
+            {/* Toggle button */}
             <TouchableOpacity
               onPress={toggleLegend}
               className="bg-gray-100 dark:bg-zinc-700 px-3 justify-center items-center self-stretch"
